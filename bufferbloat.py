@@ -115,7 +115,7 @@ def start_ping(net):
     h2 = net.get('h2')
     print("Starting ping stream...")
     
-    h1.popen("ping -i 0.1 10.0.0.2 > " + args.dir + "/pingstream.txt", shell = True)
+    h1.popen("ping -i 0.1 10.0.0.2 > " + args.dir + "/ping.txt", shell = True)
     pass
 
 def start_webserver(net):
