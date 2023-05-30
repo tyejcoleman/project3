@@ -66,8 +66,8 @@ class BBTopo(Topo):
     def build(self, n=2):
         # TODO: create two hosts
 
-        h1 = self.addHost('h1', ip='10.0.0.1')
-        h2 = self.addHost('h2', ip='10.0.0.2')
+        h1 = self.addHost('h1')
+        h2 = self.addHost('h2')
 
 
         # Here I have created a switch.  If you change its name, its
@@ -94,7 +94,7 @@ def start_iperf(net):
 
     # TODO: Start the iperf client on h1.  Ensure that you create a
     # long lived TCP flow.
-    client = h1.popen(f"iperf -c 10.0.0.2 -t {args.time} > {args.dir}/iperf.txt", shell=True)
+    client = h1.popen(f"iperf -c {h2.IP()} -t {args.time} > {args.dir}/iperf.txt", shell=True)
 
 
 def start_qmon(iface, interval_sec=0.1, outfile="q.txt"):
@@ -115,7 +115,7 @@ def start_ping(net):
     h2 = net.get('h2')
     print("Starting ping stream...")
     
-    h1.popen("ping -i 0.1 10.0.0.2 > " + args.dir + "/ping.txt", shell = True)
+    h1.popen("ping -i 0.1 + " + h2.IP() + " > " + args.dir + "/ping.txt", shell = True)
     pass
 
 def start_webserver(net):
