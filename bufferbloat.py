@@ -5,6 +5,7 @@ from mininet.net import Mininet
 from mininet.log import lg, info
 from mininet.util import dumpNodeConnections
 from mininet.cli import CLI
+from mininet.node import OVSSwitch
 
 from subprocess import Popen, PIPE
 from time import sleep, time
@@ -71,7 +72,7 @@ class BBTopo(Topo):
 
         # Here I have created a switch.  If you change its name, its
         # interface names will change from s0-eth1 to newname-eth1.
-        switch = self.addSwitch('s0')
+        switch = self.addSwitch('s0', cls=OVSSwitch) #TODO OVSBridge?
 
         # TODO: Add links with appropriate characteristics
 
@@ -118,6 +119,7 @@ def start_ping(net):
     pass
 
 def start_webserver(net):
+    print("Starting webserver...")
     h1 = net.get('h1')
     proc = h1.popen("python webserver.py", shell=True)
     sleep(1)
@@ -141,7 +143,7 @@ def bufferbloat():
         os.makedirs(args.dir)
     os.system("sysctl -w net.ipv4.tcp_congestion_control=%s" % args.cong)
     topo = BBTopo()
-    net = Mininet(topo=topo, host=CPULimitedHost, link=TCLink)
+    net = Mininet(topo=topo, host=CPULimitedHost, link=TCLink, controller=None)
     net.start()
     # This dumps the topology and how nodes are interconnected through
     # links.
@@ -157,12 +159,11 @@ def bufferbloat():
     qmon = start_qmon(iface='s0-eth2',
                       outfile='%s/q.txt' % (args.dir))
     
-
+    start_ping(net)
     # TODO: Start iperf, webservers, etc.
     # start_iperf(net)
     start_webserver(net)
     start_iperf(net)
-    start_ping(net)
 
     # TODO: measure the time it takes to complete webpage transfer
     # from h1 to h2 (say) 3 times.  Hint: check what the following
@@ -175,6 +176,7 @@ def bufferbloat():
     # Hint: have a separate function to do this and you may find the
     # loop below useful.
     start_time = time()
+    print("Starting page fetch...")
     while True:
         # do the measurement (say) 3 times.
         sleep(5)
