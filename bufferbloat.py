@@ -72,7 +72,7 @@ class BBTopo(Topo):
 
         # Here I have created a switch.  If you change its name, its
         # interface names will change from s0-eth1 to newname-eth1.
-        switch = self.addSwitch('s0', cls=OVSSwitch) #TODO OVSBridge?
+        switch = self.addSwitch('s0') # KEEP!, cls=OVSSwitch) #TODO OVSBridge?
 
         # TODO: Add links with appropriate characteristics
 
