@@ -1,5 +1,5 @@
 from mininet.topo import Topo
-from mininet.node import CPULimitedHost
+from mininet.node import CPULimitedHost, RemoteController, Controller
 from mininet.link import TCLink
 from mininet.net import Mininet
 from mininet.log import lg, info
@@ -17,7 +17,9 @@ from monitor import monitor_qlen
 import sys
 import os
 import math
-import numpy
+import numpy as numpy
+
+from functools import partial
 
 parser = ArgumentParser(description="Bufferbloat tests")
 parser.add_argument('--bw-host', '-B',
@@ -72,7 +74,7 @@ class BBTopo(Topo):
 
         # Here I have created a switch.  If you change its name, its
         # interface names will change from s0-eth1 to newname-eth1.
-        switch = self.addSwitch('s0') # KEEP!, cls=OVSSwitch) #TODO OVSBridge?
+        switch = self.addSwitch('s0')
 
         # TODO: Add links with appropriate characteristics
 
@@ -94,7 +96,7 @@ def start_iperf(net):
 
     # TODO: Start the iperf client on h1.  Ensure that you create a
     # long lived TCP flow.
-    client = h1.popen(f"iperf -c {h2.IP()} -t {args.time} > {args.dir}/iperf.txt", shell=True)
+    client = h1.popen(f"iperf -c %s -w 16m -t %s > %s/iperf.txt" %(h2.IP(), args.time, args.dir), shell=True)
 
 
 def start_qmon(iface, interval_sec=0.1, outfile="q.txt"):
@@ -114,14 +116,12 @@ def start_ping(net):
     h1 = net.get('h1')
     h2 = net.get('h2')
     print("Starting ping stream...")
-    
-    h1.popen("ping -i 0.1 + " + h2.IP() + " > " + args.dir + "/ping.txt", shell = True)
-    pass
+    pingstream = h1.popen("ping %s -i 0.1 -w %d > %s/ping.txt" %(h2.IP(), args.time, args.dir), shell = True)
 
 def start_webserver(net):
     print("Starting webserver...")
     h1 = net.get('h1')
-    proc = h1.popen("python webserver.py", shell=True)
+    proc = h1.popen("sudo python3 webserver.py", shell=True) #("python webserver.py", shell=True)
     sleep(1)
     return [proc]
 
@@ -143,13 +143,16 @@ def bufferbloat():
         os.makedirs(args.dir)
     os.system("sysctl -w net.ipv4.tcp_congestion_control=%s" % args.cong)
     topo = BBTopo()
-    net = Mininet(topo=topo, host=CPULimitedHost, link=TCLink)
+    net = Mininet(topo=topo, host=CPULimitedHost, link=TCLink, controller=partial( RemoteController, ip='127.0.0.1', port=6633 ))
+    #net = Mininet(topo=topo, host=CPULimitedHost, link=TCLink)
     net.start()
+    print("Starting network...")
     # This dumps the topology and how nodes are interconnected through
     # links.
     dumpNodeConnections(net.hosts)
     # This performs a basic all pairs ping test.
     net.pingAll()
+    print("PingAll done")
 
     # TODO: Start monitoring the queue sizes.  Since the switch I
     # created is "s0", I monitor one of the interfaces.  Whichfor i in range(1,n+1):
@@ -159,11 +162,11 @@ def bufferbloat():
     qmon = start_qmon(iface='s0-eth2',
                       outfile='%s/q.txt' % (args.dir))
     
-    start_ping(net)
     # TODO: Start iperf, webservers, etc.
-    # start_iperf(net)
-    start_webserver(net)
     start_iperf(net)
+    start_ping(net)
+    webserv = start_webserver(net)
+    #start_iperf(net)
 
     # TODO: measure the time it takes to complete webpage transfer
     # from h1 to h2 (say) 3 times.  Hint: check what the following
@@ -175,12 +178,16 @@ def bufferbloat():
 
     # Hint: have a separate function to do this and you may find the
     # loop below useful.
+    h2 = net.get('h2')
     start_time = time()
+    fetch_list = []
     print("Starting page fetch...")
     while True:
         # do the measurement (say) 3 times.
-        sleep(5)
-        fetch_list = measure_download(net)
+        for _ in range(3):
+            cmd = h2.popen("curl -o /dev/null -s -w %{time_total} 10.0.0.1:80/download.txt", stdout=PIPE)
+            fetch_list.append(float(cmd.communicate()[0]))
+            #print(fetch_list)
         now = time()
         delta = now - start_time
         if delta > args.time:
