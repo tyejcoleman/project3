@@ -8,7 +8,7 @@ Name: Bianca Greydinger
 UWNetID: bgreyd
 
 Instructions to reproduce the results:
-  TODO
+  Download our `bufferbloat.py`, `run.sh`, and `run_bbr.sh` into the existing file structure. Then run `sudo ./run.sh` to generate tcp reno graphs and run `sudo ./run_bbr.sh` to generate bbr graphs.
 
 Answers to the questions:
 Part 2
