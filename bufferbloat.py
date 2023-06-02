@@ -184,6 +184,7 @@ def bufferbloat():
     print("Starting page fetch...")
     while True:
         # do the measurement (say) 3 times.
+        sleep(5)
         for _ in range(3):
             cmd = h2.popen("curl -o /dev/null -s -w %{time_total} 10.0.0.1:80/download.txt", stdout=PIPE)
             fetch_list.append(float(cmd.communicate()[0]))
