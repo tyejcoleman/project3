@@ -125,18 +125,18 @@ def start_webserver(net):
     sleep(1)
     return [proc]
 
-def measure_download(net):
-    h1 = net.get('h1')
-    h2 = net.get('h2')
-    fetch_list = []
+#def measure_download(net):
+    #h1 = net.get('h1')
+    #h2 = net.get('h2')
+    #fetch_list = []
     
-    for _ in range(3):
-        sleep(.5)
-        fetch = h2.popen("curl -o /dev/null -s -w %{} 10.0.0.1/download.txt".format("{time_total}"))
-        fetch.wait()
-        fetch_list.append(float(fetch.communicate()[0]))
+    #for _ in range(3):
+        #sleep(.5)
+        #fetch = h2.popen("curl -o /dev/null -s -w %{} 10.0.0.1/download.txt".format("{time_total}"))
+        #fetch.wait()
+        #fetch_list.append(float(fetch.communicate()[0]))
 
-    return fetch_list
+    #return fetch_list
         
 def bufferbloat():
     if not os.path.exists(args.dir):
