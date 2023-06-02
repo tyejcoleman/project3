@@ -164,8 +164,8 @@ def bufferbloat():
     
     # TODO: Start iperf, webservers, etc.
     start_iperf(net)
-    start_ping(net)
     webserv = start_webserver(net)
+    start_ping(net)
     #start_iperf(net)
 
     # TODO: measure the time it takes to complete webpage transfer
