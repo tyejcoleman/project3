@@ -17,16 +17,16 @@ Part 2
      q=100 : avg 0.7046730897435898
              std 0.84929256936187
              
-  2. The difference in webpage fetch times with different-sized queues is caused by bufferbloat. Bufferbloat is a condition where excess buffering of packets cause higher latency and delay variations. 
+  2. The difference in webpage fetch times with different-sized queues is caused by bufferbloat. Bufferbloat is a condition where excess buffering of packets causes higher latency and delay variations. 
      As you can see the larger queue has a longer average fetch time and higher variation for the values. When the queue size is larger, each packet will have to wait longer in the buffer before it can be transmitted, 
      which leads to high latency.
      
   3. TODO
   
-  4. RTT is proportional to the queue size. As described in question 2, larger queue size results in longer delay for the packets to be transmitted, meaning larger RTT.
+  4. RTT is proportional to the queue size. As described in question 2, a larger queue size results in a longer delay for transmitting packets, meaning larger RTT.
   
   5. One way to mitigate this problem is to reduce or set a maximum size on the queue such that is it the most efficient queue size for the particular transmission rate.
-     Another way to solve this issue is to use an active queue management algorithm (AQM). This algorithm dynamically controls the amount of packets entering the network.
+     Another way to solve this issue is to use an active queue management algorithm (AQM). This algorithm dynamically controls the number of packets entering the network.
      It monitors the queue length and drop packets when the queue gets too long, and tells the sender to reduce the transmission rate to maintain efficiency.
      
 Part 3
@@ -35,8 +35,13 @@ Part 3
      q=100 : avg 0.12376845454545 
              std 0.024401307801627192
              
-  2. The average fetch time between the two queue sizes are very similar as well as the standard deviation for both queues. Suprisingly, the longer queue length (q=100) gave a slightly lower average fetch time for our results.
-     On the other hand in Part2, the average fetch time for q=100 was significantly higher than the fetch time for q=20. 
+  2. The average fetch time between the two queue sizes is very similar as well as the standard deviation for both queues. Surprisingly, the longer queue length (q=100) gave our results a slightly lower average fetch time.
+     On the other hand in Part 2, the average fetch time for q=100 was significantly higher than the fetch time for q=20. 
      
-  3. TODO
-  4. TODO
+  3. For the buffer graphs in Part 3, the graphs are identical for both queue sizes. However, for the buffer graph for q=100 in Part 2, there is a spike in packets held in the buffer around 100 seconds in.  
+     For queue size 20, the graph looks acceptable as the number of packets stays relatively constant and periodic. We can presume the bufferbloat phenomenon occurs at 100 seconds for q=100 in Part 2. When the network becomes congested, 
+     TCP Reno congestion control algorithm reduces the sending rate, but the buffer continues to hold packets, leading to a spike in the number of packets in the buffer.
+     
+  4. The bufferbloat problem has been significantly mitigated in Part 3 because of TCP BBR. The average fetch time was not affected by the increase in queue size. This means that the congestion control algorithm in TCP BBR
+     was able to effectively determine the bottleneck bandwidth of the network and estimate the RTT. This allows the protocol to determine the most efficient congestion window size so that it can maximize the packets being sent without causing congestion.
+
