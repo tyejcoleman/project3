@@ -152,6 +152,7 @@ def bufferbloat():
     dumpNodeConnections(net.hosts)
     # This performs a basic all pairs ping test.
     net.pingAll()
+    #CLI(net)
     print("PingAll done")
 
     # TODO: Start monitoring the queue sizes.  Since the switch I
