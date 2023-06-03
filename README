@@ -46,5 +46,5 @@ Part 3
      
   4. The bufferbloat problem has been significantly mitigated in Part 3 because of TCP BBR. The average fetch time was not affected by the increase in queue size, and was in fact better. This means that the congestion 
      control algorithm in TCP BBR was able to effectively determine the bottleneck bandwidth of the network and estimate the RTT. This allows the protocol to determine the most efficient congestion window size so that 
-     it can maximize the packets being sent while minimizing congestion and losses.
+     it can maximize the packets being sent while minimizing congestion and losses. In the context of this lab, BBR was able to resolve bufferbloat on the network.
 
