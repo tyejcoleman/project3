@@ -21,8 +21,9 @@ Part 2
      As you can see the larger queue has a longer average fetch time and higher variation for the values. When the queue size is larger, each packet will have to wait longer in the buffer before it can be transmitted, 
      which leads to high latency.
      
-  3. TODO
-  
+  3. The transmit queue length reported by ifconfig was 1000. Given that the maximum transmission unit size (MTU) is 1500 bytes (12000 bits)
+     Therefore, 1000 * 12000 b / (100 * 10^6 Mb/s) = 0.12 s
+     
   4. RTT is proportional to the queue size. As described in question 2, a larger queue size results in a longer delay for transmitting packets, meaning larger RTT.
   
   5. One way to mitigate this problem is to reduce or set a maximum size on the queue such that is it the most efficient queue size for the particular transmission rate.
