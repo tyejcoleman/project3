@@ -18,8 +18,9 @@ Part 2
              std 0.84929256936187
              
   2. The difference in webpage fetch times with different-sized queues is caused by bufferbloat. Bufferbloat is a condition where excess buffering of packets causes higher latency and delay variations. 
-     As you can see the larger queue has a longer average fetch time and higher variation for the values. When the queue size is larger, each packet will have to wait longer in the buffer before it can be transmitted, 
-     which leads to high latency.
+     As you can see the larger queue has a longer average fetch time and higher variation for the values. When the queue size is larger, each packet will have to wait longer in the buffer 
+     before it can be transmitted (in the case of a full buffer), which leads to high latency. Not only this, but due to increaesed latency, our timeout will be higher so if we drop a packet 
+     it will take us longer to realize and resend.
      
   3. The transmit queue length reported by ifconfig was 1000. Given that the maximum transmission unit size (MTU) is 1500 bytes (12000 bits)
      Therefore, 1000 * 12000 b / (100 * 10^6 Mb/s) = 0.12 s
@@ -28,7 +29,7 @@ Part 2
   
   5. One way to mitigate this problem is to reduce or set a maximum size on the queue such that is it the most efficient queue size for the particular transmission rate.
      Another way to solve this issue is to use an active queue management algorithm (AQM). This algorithm dynamically controls the number of packets entering the network.
-     It monitors the queue length and drop packets when the queue gets too long, and tells the sender to reduce the transmission rate to maintain efficiency.
+     It monitors the queue length and drops packets when the queue gets too long, and tells the sender to reduce the transmission rate to maintain efficiency.
      
 Part 3
   1. q=20 :  avg 0.12396319191919
