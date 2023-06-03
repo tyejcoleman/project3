@@ -12,9 +12,15 @@ Instructions to reproduce the results:
 
 Answers to the questions:
 Part 2
-  1. TODO
-  2. TODO
-  3. TODO
+  1. q=20 :  avg 0.349251922222
+             std 0.5080346978384717
+     q=100 : avg 0.7046730897435898
+             std 0.84929256936187
+             
+  2. The difference in webpage fetch times with different-sized queues is caused by bufferbloat. Bufferbloat is a condition where excess buffering of packets cause higher latency and delay variations. 
+     As you can see the larger queue has a longer average fetch time and higher variation for the values. When the queue size is larger, each packet will have to wait longer in the buffer before it can be transmitted, which leads to high latency.
+     
+  3. RTT is proportional to the queue size, 
   4. TODO
   5. TODO
 Part 3
