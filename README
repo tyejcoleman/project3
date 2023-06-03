@@ -40,10 +40,11 @@ Part 3
   2. The average fetch time between the two queue sizes is very similar as well as the standard deviation for both queues. Surprisingly, the longer queue length (q=100) gave a slightly lower average fetch time.
      On the other hand in Part 2, the average fetch time for q=100 was significantly higher than the fetch time for q=20. 
      
-  3. For the buffer graphs in Part 3, the graphs are identical for both queue sizes. However, for the buffer graph for q=100 in Part 2, there is a spike in packets held in the buffer around 100 seconds in.  
+  3. For the bbr buffer graphs in Part 3, the graphs are almost identical for both queue sizes. However, for the reno buffer graph for q=100 in Part 2, there is a spike in packets held in the buffer around 100 seconds in.  
      For queue size 20, the graph looks acceptable as the number of packets stays relatively constant and periodic. We can presume the bufferbloat phenomenon occurs at 100 seconds for q=100 in Part 2. When the network becomes congested, 
      TCP Reno congestion control algorithm reduces the sending rate, but the buffer continues to hold packets, leading to a spike in the number of packets in the buffer.
      
-  4. The bufferbloat problem has been significantly mitigated in Part 3 because of TCP BBR. The average fetch time was not affected by the increase in queue size. This means that the congestion control algorithm in TCP BBR
-     was able to effectively determine the bottleneck bandwidth of the network and estimate the RTT. This allows the protocol to determine the most efficient congestion window size so that it can maximize the packets being sent without causing congestion.
+  4. The bufferbloat problem has been significantly mitigated in Part 3 because of TCP BBR. The average fetch time was not affected by the increase in queue size, and was in fact better. This means that the congestion 
+     control algorithm in TCP BBR was able to effectively determine the bottleneck bandwidth of the network and estimate the RTT. This allows the protocol to determine the most efficient congestion window size so that 
+     it can maximize the packets being sent while minimizing congestion and losses.
 
